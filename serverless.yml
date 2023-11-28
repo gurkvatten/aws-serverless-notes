@@ -8,5 +8,24 @@ provider:
   region: eu-north-1
 
 functions:
-  function1:
-    handler: index.handler
+  getNotes:
+    handler: handlers/getNotes.handler
+    events:
+      - http:
+          path: api/notes
+          method: get
+          authorizer: aws_iam
+   postNotes:
+    handler: handlers/postNotes.handler
+    events:
+      - http:
+          path: api/notes
+          method: post
+          authorizer: aws_iam
+          
+ resources:
+  Resources:
+    MyDynamoDBTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: myNotesTable         
