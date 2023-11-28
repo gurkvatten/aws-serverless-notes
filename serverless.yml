@@ -15,7 +15,7 @@ functions:
           path: api/notes
           method: get
           authorizer: aws_iam
-   postNotes:
+  postNotes:
     handler: handlers/postNotes.handler
     events:
       - http:
@@ -23,7 +23,7 @@ functions:
           method: post
           authorizer: aws_iam
           
- resources:
+resources:
   Resources:
     MyDynamoDBTable:
       Type: AWS::DynamoDB::Table
