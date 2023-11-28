@@ -1,0 +1,12 @@
+service: aws-serverless-notes
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  profile: Johan-Skola
+  region: eu-north-1
+
+functions:
+  function1:
+    handler: index.handler
