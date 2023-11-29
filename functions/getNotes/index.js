@@ -1,5 +1,7 @@
 const AWS = require('aws-sdk');
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
+const middy = require('@middy/core');
+const { authMiddleware } = require('./authMiddleware');
 
 
 exports.handler = async (event, context) => {
