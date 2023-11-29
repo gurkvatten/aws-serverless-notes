@@ -3,7 +3,7 @@ const dynamoDB = new AWS.DynamoDB.DocumentClient();
 
 
 exports.handler = async (event, context) => {
-
+    const userId = event.requestContext.authorizer.principalId;
 
     const params = {
         TableName: 'myNotesTable',
@@ -26,3 +26,5 @@ try {
       body: JSON.stringify({ message: 'Could not fetch notes.' })
     };
   }
+
+  module.exports.handler = middy(getNotesHandler).use(authMiddleware());
