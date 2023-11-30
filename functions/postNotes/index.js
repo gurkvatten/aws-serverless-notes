@@ -1,35 +1,26 @@
 const AWS = require('aws-sdk');
-const dynamoDB = new AWS.DynamoDB.DocumentClient();
+const db = new AWS.DynamoDB.DocumentClient();
+const { sendResponse } = require('../../responses');
 
 
 exports.handler = async (event, context) => {
-    const { title, text } = JSON.parse(event.body); 
+  const note = JSON.parse(event.body);
 
-    
-    const userId = event.requestContext.authorizer.principalId; 
-  
-    const params = {
-      TableName: 'myNotesTable',
-      Item: {
-        userId: userId, 
-        id: Math.random().toString(36).substring(2), 
-        title: title,
-        text: text,
-        createdAt: new Date().toISOString(),
-        modifiedAt: new Date().toISOString()
-      }
-    };
-  
-    try {
-      await dynamoDB.put(params).promise();
-      return {
-        statusCode: 200,
-        body: JSON.stringify({ message: 'Note created successfully.' })
-      };
-    } catch (error) {
-      return {
-        statusCode: 500,
-        body: JSON.stringify({ message: 'Could not create note.' })
-      };
-    }
-  };
+  const timestamp = new Date().getTime();
+
+  note.id = `${timestamp}`;
+
+  note.uid = `${userID}`;
+
+  try {
+      await db.put({
+          TableName: 'myNotesTable',
+          Item: note
+      }).promise()
+
+      return sendResponse(200, {success: true});
+  } catch (error) {
+      console.error('DynamoDB put error:', error);
+      return sendResponse(500, {success: false});
+  }
+}

@@ -1,32 +1,27 @@
 const AWS = require('aws-sdk');
-const dynamoDB = new AWS.DynamoDB.DocumentClient();
-const middy = require('@middy/core');
-const { authMiddleware } = require('./authMiddleware');
+const db = new AWS.DynamoDB.DocumentClient();
+const { sendResponse } = require('../../responses');
+const { validateToken } = require('../middleware/auth');
+import middy from "@middy/core";
 
+const getNotes = async (event, context) => {
 
-exports.handler = async (event, context) => {
-    const userId = event.requestContext.authorizer.principalId;
+  if (event?.error && event?.error === '401')
+    return sendResponse(401, {success: false , message: 'Invalid token' });
 
-    const params = {
-        TableName: 'myNotesTable',
-        KeyConditionExpression: 'userId = :uid', 
-        ExpressionAttributeValues: {
-          ':uid': event.requestContext.authorizer.principalId
-        }
+  const {Items} = await db.scan({
+    TableName: 'myNotesTable', 
+    FilterExpression: "attribute_exists(#id)",
+    ExpressionAttributeNames: {
+      "#id" : "id"
     }
+  }).promise();
+
+  return sendResponse(200, {success : true, notes : Items});
 }
 
-try {
-    const data = await dynamoDB.query(params).promise();
-    return {
-      statusCode: 200,
-      body: JSON.stringify(data.Items)
-    };
-  } catch (error) {
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ message: 'Could not fetch notes.' })
-    };
-  }
+const handler = middy(getNotes)
+  .use(validateToken)
+  
 
-  module.exports.handler = middy(getNotesHandler).use(authMiddleware());
+module.exports = { handler };
