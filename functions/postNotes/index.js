@@ -1,16 +1,18 @@
 const AWS = require('aws-sdk');
 const db = new AWS.DynamoDB.DocumentClient();
 const { sendResponse } = require('../../responses');
-
+const { v4: uuidv4 } = require('uuid');
 
 exports.handler = async (event, context) => {
   const note = JSON.parse(event.body);
 
   const timestamp = new Date().getTime();
 
-  note.id = `${timestamp}`;
+  const uniqueId = uuidv4();
 
-  note.uid = `${userID}`;
+
+  note.id = uniqueId;
+
 
   try {
       await db.put({

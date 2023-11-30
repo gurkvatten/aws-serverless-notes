@@ -50,11 +50,11 @@ resources:
       Properties:
         TableName: myNotesTable
         AttributeDefinitions:
-          - AttributeName: Id
+          - AttributeName: id
             AttributeType: S   # Om det är en sträng
             # eller AttributeType: N om det är en nummer
         KeySchema:
-          - AttributeName: Id
+          - AttributeName: id
             KeyType: HASH   # Använd noteId som huvudnyckel
         ProvisionedThroughput:
           ReadCapacityUnits: 5

@@ -1,7 +1,7 @@
-const AWS = require('aws-sdk');
-const db = new AWS.DynamoDB.DocumentClient();
-const { sendResponse } = require('../../responses');
-const { validateToken } = require('../middleware/auth');
+import AWS from 'aws-sdk';
+import { DocumentClient } from 'aws-sdk/lib/dynamodb/document_client.js';
+import { sendResponse } from '../../responses/index.js';
+import { validateToken } from '../middleware/auth.js';
 import middy from "@middy/core";
 
 const getNotes = async (event, context) => {
@@ -11,10 +11,6 @@ const getNotes = async (event, context) => {
 
   const {Items} = await db.scan({
     TableName: 'myNotesTable', 
-    FilterExpression: "attribute_exists(#id)",
-    ExpressionAttributeNames: {
-      "#id" : "id"
-    }
   }).promise();
 
   return sendResponse(200, {success : true, notes : Items});
