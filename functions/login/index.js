@@ -35,7 +35,7 @@ async function login(username, password) {
 
     if(!correctPassword) return {success: false, message: 'Incorrect username or password' };
 
-    const token = jwt.sign({ id: user.userId, username: user.username}, "aabbcc", { expiresIn: 3600 } );
+    const token = jwt.sign({ id: user.userId, username: user.username}, "aabbcc", { expiresIn: 36000 } );
 
     return {success: true, token: token }
 

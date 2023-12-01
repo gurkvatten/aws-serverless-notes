@@ -7,11 +7,14 @@ exports.handler = async (event, context) => {
   const note = JSON.parse(event.body);
 
   const timestamp = new Date().getTime();
+  const dateNow = new Date().getUTCDate();
 
   const uniqueId = uuidv4();
 
 
-  note.id = uniqueId;
+  note.uid = uniqueId;
+  note.id = `${timestamp}`;
+  note.date = `${dateNow}`;
 
 
   try {

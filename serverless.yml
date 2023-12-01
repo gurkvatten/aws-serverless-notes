@@ -24,6 +24,12 @@ functions:
       - http:
           path: api/notes
           method: get
+  putNotes:
+    handler: functions/patchNotes/index.handler
+    events:
+      - http:
+          path: api/notes
+          method: put        
   postNotes:
     handler: functions/postNotes/index.handler
     events:
@@ -42,6 +48,12 @@ functions:
       - http:
           path: api/user/login
           method: post
+  deleteNotes:
+    handler: functions/deleteNotes/index.handler
+    events:
+      - http:
+          path: api/notes
+          method: delete       
           
 resources:
   Resources:
